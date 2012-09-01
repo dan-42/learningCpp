@@ -3,11 +3,12 @@
 #ifndef __SOCKET_MSG_HPP__
 #define  __SOCKET_MSG_HPP__
 
+#include <string>
+#include <iostream>
 
 class SocketMsg {
     public:
        SocketMsg();
-   //    SocketMsg(const SocketMsg& );
        SocketMsg(int maxBufferSize);
        SocketMsg(std::string msg);
 

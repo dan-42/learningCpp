@@ -2,7 +2,6 @@
 #include <string>
 
 #include "buffer.hpp"
-#include "LinkedList.hpp"
 
 SocketMsg::SocketMsg( std::string msg):
                 m_data(msg){
@@ -15,6 +14,7 @@ SocketMsg::SocketMsg(int size):
 }
 
 SocketMsg::~SocketMsg() {
+    // std::cout << "die Msg, die!!!\n";
     
 }
     
