@@ -33,17 +33,20 @@ public:
 		timer_.expires_from_now(std::chrono::seconds(2));
 		//timer_.async_wait(boost::bind(ApplicationLayer::handle_do_some_work, this, boost::asio::placeholders::error, handler));
 
-		boost::function<void (ApplicationLayer*, const boost::system::error_code&, Handler handler)> function_obj;
-		function_obj = &ApplicationLayer::handle_do_some_work<Handler>;
-		timer_.async_wait(boost::bind(function_obj, this, boost::asio::placeholders::error, handler));
+		//boost::function<void (ApplicationLayer*, const boost::system::error_code&, Handler handler)> function_obj;
+		//function_obj = &ApplicationLayer::handle_do_some_work<Handler>;
+		//timer_.async_wait(boost::bind(function_obj, this, boost::asio::placeholders::error, handler));
 
-
-
+		/* tuple function ptr */
 		//void (ApplicationLayer::*function_ptr) ( const boost::system::error_code&, boost::tuple<Handler>) = &ApplicationLayer::handle_do_some_work<Handler>;
 		//timer_.async_wait(boost::bind(function_ptr, this, boost::asio::placeholders::error, boost::make_tuple<Handler>(handler)));
 
+		/* function ptr*/
+		//void (ApplicationLayer::*function_ptr) ( const boost::system::error_code&, Handler) = &ApplicationLayer::handle_do_some_work<Handler>;
+		//timer_.async_wait(boost::bind(function_ptr, this, boost::asio::placeholders::error, handler));
 
-		//timer_.async_wait(boost::bind(ApplicationLayer::handle_do_some_work, this, boost::asio::placeholders::error, boost::make_tuple<Handler>(handler)));
+		/* straight away  don't work*/
+		timer_.async_wait(boost::bind(&ApplicationLayer::handle_do_some_work, this, boost::asio::placeholders::error, handler));
 
 	}
 
