@@ -1,0 +1,3 @@
+/home/schoko/git/learningCpp/build/src/CMakeFiles/event_bus_client.dir
+/home/schoko/git/learningCpp/build/src/CMakeFiles/event_bus_main.dir
+/home/schoko/git/learningCpp/build/src/CMakeFiles/spirit.dir

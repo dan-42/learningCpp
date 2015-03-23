@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++11  -g   CMakeFiles/event_bus_client.dir/event_bus/client_main.cpp.o  -o ../event_bus_client -rdynamic -lboost_serialization -lboost_thread -lboost_date_time -lboost_filesystem -lboost_system -lboost_program_options -lboost_log -lboost_log_setup -lpthread 

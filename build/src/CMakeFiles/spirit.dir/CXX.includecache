@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/schoko/git/learningCpp/src/spirit/spirit.cpp
+vector
+-
+iostream
+-
+cstdint
+-
+boost/spirit/include/karma.hpp
+-
+boost/spirit/include/phoenix_core.hpp
+-
+boost/spirit/include/phoenix_operator.hpp
+-
+boost/spirit/include/phoenix_object.hpp
+-
+boost/fusion/include/adapt_adt.hpp
+-
+boost/fusion/include/adapt_struct.hpp
+-
+boost/spirit/home/support/adapt_adt_attributes.hpp
+-
+

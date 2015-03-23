@@ -34,33 +34,39 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/pattern/singelton/variant_1" )
 include_directories("${CMAKE_CURRENT_LIST_DIR}/asyncprotocol_stack" )
 include_directories("${CMAKE_CURRENT_LIST_DIR}/event_bus" )
 include_directories("${CMAKE_CURRENT_LIST_DIR}/event_bus/event_bus" )
+include_directories("${CMAKE_CURRENT_LIST_DIR}/boost_costum_errorcodes" )
 
 
-file(GLOB_RECURSE SOURCES_ASYNC "async/*.cpp")
+
+file(GLOB_RECURSE SOURCES_HEX_TO_BINARY "tests/parser_performance/*.cpp")
+file(GLOB_RECURSE SOURCES_SPIRIT "spirit/*.cpp")
 file(GLOB_RECURSE SOURCES_PATTERN "pattern/*.cpp")
 file(GLOB_RECURSE SOURCES_PARSE "parse/*.cpp")
 file(GLOB_RECURSE SOURCES_SPIRIT "spirit/*.cpp")
-
-#message(STATUS "SOURCES  ${SOURCES}")
-#message(STATUS "Includes ${CMAKE_CURRENT_LIST_DIR}/pattern/singelton/variant_1")
+file(GLOB_RECURSE SOURCES_ERROR_CODES "boost_costum_errorcodes/*.cpp")
+ 
+message(STATUS "SOURCES_ERROR_CODES  ${SOURCES_ERROR_CODES}")
+message(STATUS "Includes ${CMAKE_CURRENT_LIST_DIR}/boost_costum_errorcodes")
 #message(STATUS "Includes ${CMAKE_CURRENT_LIST_DIR}/asyncprotocol_stack") 
 
 
 #### Project Build Targets
+add_executable(hex_to_binary  ${SOURCES_HEX_TO_BINARY} )
+
 add_executable(spirit  ${SOURCES_SPIRIT} )
-#add_executable(main main.cpp ${SOURCES_ASYNC} ${SOURCES_PATTERN} )
-#add_executable(main_spirit main_spirit.cpp ${SOURCES_PARSE}  )
+add_executable(main main.cpp ${SOURCES_ASYNC} ${SOURCES_PATTERN} ${SOURCES_ERROR_CODES})
+
 add_executable(event_bus_main ${CMAKE_CURRENT_LIST_DIR}/event_bus/event_bus_main.cpp  )
 add_executable(event_bus_client ${CMAKE_CURRENT_LIST_DIR}/event_bus/client_main.cpp  )
 
 
 #### Linking
-#target_link_libraries(main ${Boost_LIBRARIES} ${PSAPI_LIBRARIES} pthread)
+target_link_libraries(main ${Boost_LIBRARIES} ${PSAPI_LIBRARIES}  pthread)
 target_link_libraries(spirit ${Boost_LIBRARIES} ${PSAPI_LIBRARIES} pthread)
 #target_link_libraries(main_spirit ${Boost_LIBRARIES} ${PSAPI_LIBRARIES} pthread)
 target_link_libraries(event_bus_main ${Boost_LIBRARIES} ${PSAPI_LIBRARIES} pthread)
 target_link_libraries(event_bus_client ${Boost_LIBRARIES} ${PSAPI_LIBRARIES} pthread)
-
+ 
 
 	
 if(WIN32)

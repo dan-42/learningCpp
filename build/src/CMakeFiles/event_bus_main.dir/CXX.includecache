@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/schoko/git/learningCpp/src/event_bus/event_bus_main.cpp
+cstdio
+-
+iostream
+-
+boost/array.hpp
+-
+boost/bind.hpp
+-
+boost/enable_shared_from_this.hpp
+-
+boost/shared_ptr.hpp
+-
+boost/asio.hpp
+-
+

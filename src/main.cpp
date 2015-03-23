@@ -5,161 +5,108 @@
 
 #include <memory>
 
-#include <boost/asio.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/array.hpp>
 
-#include "pattern/singelton/variant_1/Singelton.hpp"
-#include "async/protocol_stack/ApplicationLayer.hpp"
+//#include <chocoloate.hpp>
+
+
+
+
+
+
+namespace umcd{
+enum error
+{
+  invalid_packet,
+  invalid_packet_name,
+  request_header_too_large,
+  internal_error,
+  bad_umc_id,
+  field_too_long,
+  num_error
+};
+} // namespace umcd
+
+
+namespace boost{ namespace system {
+template<>
+struct is_error_condition_enum<umcd::error>
+{
+  static const bool value = true;
+};
+}}
+
+
+
+
+
+namespace umcd{
+class error_category : public boost::system::error_category {
+  // The error message catalogue contains exactly the number of entry, thanks to num_error.
+  static const boost::array<std::string, num_error> error_messages;
+public:
+  const char* name() const BOOST_SYSTEM_NOEXCEPT;
+  std::string message(int ev) const BOOST_SYSTEM_NOEXCEPT;
+};
+
+} // namespace umcd
+
+
+namespace umcd{
+const boost::array<std::string, num_error> error_category::error_messages = {{
+  "The packet you sent is invalid. It could be a protocol bug and administrators have been contacted, the problem should be fixed soon.", // invalid_packet
+  "The packet you sent has an invalid name. It could be a protocol bug and administrators have been contacted, the problem should be fixed soon.", // invalid_packet_name
+  "The request you sent is too large. It can happens if you try to send a really large pbl file, you can claim help on IRC, and we'll find a solution.", // request_header_too_large
+  "The server has encountered an unexpected error and your request cannot be processed.\n Congratz, you found a bug.", // internal_error
+  "The ID inside your pbl file is unknown. No UMC found with this id.", // bad_umc_id
+  "A field in your request is longer in size than allowed." // field_too_long
+}};
+
+
+const boost::system::error_category& umcd_category() {
+  static const umcd::error_category umcd_category_const;
+  return umcd_category_const;
+}
+
+
+boost::system::error_condition make_error_condition(umcd::error e)
+{
+  return boost::system::error_condition(e, umcd_category());
+}
+
+}
+
+
+namespace umcd{
+
+
+const char* error_category::name() const BOOST_SYSTEM_NOEXCEPT
+{
+  return "umcd";
+}
+
+std::string error_category::message(int ev) const BOOST_SYSTEM_NOEXCEPT
+{
+  if(ev < 0 || ev >= static_cast<int>(error_messages.size()))
+    return std::string("Unknown error");
+  return error_messages[ev];
+}
+}// namespace umcd
+
+
+
+
+
 
 using namespace std;
 
-class MyThread {
-public:
-	MyThread(boost::asio::io_service &ioS) :
-			mIoS(ioS), running(true) {
-	}
-
-	void run() {
-		mIoS.run();
-	}
-
-	void doWork() {
-		cout << "MyThread " << this_thread::get_id() << "  " << count << endl;
-		count++;
-		this_thread::sleep_for(chrono::seconds(1));
-
-		if (running) {
-			mIoS.dispatch(bind(&MyThread::doWork, this));
-		}
-	}
-
-	void doNewTask() {
-		cout << "MyThread " << this_thread::get_id() << " NEW TASK" << endl;
-	}
-
-	bool running;
-	uint32_t count = 0;
-
-	boost::asio::io_service &mIoS;
-
-};
-
-
-void myhandler(){
-	std::cout << "myhandler" << std::endl;
-}
 
 int main() {
 
-	using namespace cpp::async::protocol_stack;
-	boost::asio::io_service ios;
 
-	ApplicationLayer al(ios);
-	al.do_some_async_work(myhandler);
+	boost::system::error_condition error = boost::system::errc::make_error_condition(umcd::internal_error, umcd::umcd_category());
+	  std::cout << error.message() << std::endl;
 
-	ios.run();
-
-
-
-
-	return 0;
-	/*
-
-	using cpp::pattern::singelton::variant_1::Singelton;
-
-
-
-	Singelton *s1 = Singelton::instance();
-	s1->increase();
-	std::cout << "s1 ";
-	s1->print();
-
-	Singelton *s2 = Singelton::instance();
-	s2->increase();
-	std::cout << "s2 ";
-	s2->print();
-
-	Singelton *s3 = Singelton::instance();
-	s3->increase();
-	std::cout << "s3 ";
-	s3->print();
-
-	Singelton *s4 = Singelton::instance();
-	s4->increase();
-	std::cout << "s4 ";
-	s4->print();
-
-	std::cout << "s1 ";
-	s1->print();
-
-	return 0;
-
-	//std::shared_ptr<std::string> s = std::make_shared<std::string>("HELLO WORLD");
-
-	std::unique_ptr<std::string> s(new std::string("TEST"));
-
-	if (s != nullptr) {
-
-		std::cout << s.get() << std::endl;
-	}
-	if (!(s == nullptr)) {
-		//std::cout << s << std::endl;HINTS "/opt/boost/boost-155"
-		std::cout << s.get() << std::endl;
-	}
-
-	s.reset();
-
-	if (s == nullptr) {
-		std::cout << "RESET!!" << std::endl;
-	}
-
-	s = std::unique_ptr<std::string>(new std::string("HELLO SAUTER"));
-
-	if (!(s == nullptr)) {
-		//std::cout << s << std::endl;
-		std::cout << s.get() << std::endl;
-	}
-
-	delete s.release();
-
-	if (s == nullptr) {
-		std::cout << "RESET!!" << std::endl;
-	}
-
-	if (!(s != nullptr)) {
-		std::cout << "RESET!!" << std::endl;
-	}
-
-//	return 0;
-
-	std::cout << std::endl << std::endl;
-
-	std::cout << std::endl << std::endl;
-
-	cout << "Main Thread " << this_thread::get_id() << endl;
-
-	boost::asio::io_service ios;
-	boost::asio::io_service::work w(ios);
-
-	MyThread mt(ios);
-
-	ios.post(bind(&MyThread::doWork, mt));
-
-	cout << "Main Thread - start new Thread" << endl;
-
-	thread t(&MyThread::run, mt);
-	cout << "Main Thread - wait" << endl;
-	this_thread::sleep_for(chrono::seconds(3));
-	cout << "Main Thread - add new Task" << endl;
-	ios.post(bind(&MyThread::doNewTask, mt));
-
-	cout << "Main Thread - wait for join" << endl;
-
-	mt.running = false;
-
-	t.join();
-
-	cout << "HELLO " << endl;
-
-	// */
 	return 0;
 }

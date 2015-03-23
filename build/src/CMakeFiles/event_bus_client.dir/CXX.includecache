@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/event_bus/event_bus/event.hpp
+cstdint
+-
+vector
+-
+string
+-
+boost/archive/text_oarchive.hpp
+-
+boost/archive/text_iarchive.hpp
+-
+
+/home/schoko/git/learningCpp/src/event_bus/client_main.cpp
+cstdlib
+-
+cstring
+-
+iostream
+-
+boost/asio.hpp
+-
+event.hpp
+-
+
